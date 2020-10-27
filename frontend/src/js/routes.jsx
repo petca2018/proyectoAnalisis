@@ -25,6 +25,13 @@ import {
     Ver as VerAuto,
 } from './common/components/app/autos';
 
+import {
+    Grid as AdminProveedor,
+    Crear as CrearProveedor,
+    Editar as EditarProveedor,
+    Ver as VerProveedor,
+} from './common/components/app/proveedores';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -38,6 +45,11 @@ module.exports = (
                 <ProtectedRoute exact path="/auto/crear" component={CreatAuto} />
                 <ProtectedRoute exact path="/auto/:id/editar" component={EditarAuto} />
                 <ProtectedRoute exact path="/auto/:id" component={VerAuto} />
+
+                <ProtectedRoute exact path="/proveedor" component={AdminProveedor} />
+                <ProtectedRoute exact path="/proveedor/crear" component={CrearProveedor} />
+                <ProtectedRoute exact path="/proveedor/:id/editar" component={EditarProveedor} />
+                <ProtectedRoute exact path="/proveedor/:id" component={VerProveedor} />
 
                 <Route component={NotFound} />
             </Switch>

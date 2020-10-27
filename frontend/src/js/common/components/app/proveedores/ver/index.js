@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { actions } from '../../../../../redux/modules/autos/autos';
+import { actions } from '../../../../../redux/modules/proveedor/proveedor';
 import LoadMask from '../../../Utils/LoadMask/LoadMask';
 
-class AdminAutos extends Component {
+class AdminProveedor extends Component {
 
     componentDidMount(){
         const { match: { params } } = this.props;
@@ -20,7 +20,7 @@ class AdminAutos extends Component {
                 <div className="col-sm-12 pt-2">
                     <div className="card p-4 mb-3">
                         <div className="grid-title py-4 d-flex flex-column justify-content-center align-items-stretch align-items-sm-center">
-                            <h3> <strong> Detalles de auto </strong> </h3>
+                            <h3> <strong> Detalles de proveedor </strong> </h3>
                         </div>
 
                         <LoadMask loading={loader} light blur >
@@ -28,23 +28,19 @@ class AdminAutos extends Component {
                                 <div className="d-flex w-100 flex-column flex-md-row">
                                     <div className="flex-1">
                                         <label>
-                                            <strong style={{ fontWeight: "bolder" }}> Tipo: </strong>
+                                            <strong style={{ fontWeight: "bolder" }}> Nombre: </strong>
                                         </label>
-                                        <h5> {item.tipo} </h5>
+                                        <h5> {item.nombre} </h5>
                                         <label>
-                                            <strong style={{ fontWeight: "bolder" }}> Modelo: </strong>
+                                            <strong style={{ fontWeight: "bolder" }}> Dirección: </strong>
                                         </label>
-                                        <h5> {item.modelo} </h5>
+                                        <h5> {item.direccion} </h5>
                                     </div>
                                     <div className="flex-1">
                                         <label>
-                                            <strong style={{ fontWeight: "bolder" }}> Año: </strong>
+                                            <strong style={{ fontWeight: "bolder" }}> Teléfono: </strong>
                                         </label>
-                                        <h5> {item.año} </h5>
-                                        <label>
-                                            <strong style={{ fontWeight: "bolder" }}> Color: </strong>
-                                        </label>
-                                        <h5> {item.color} </h5>
+                                        <h5> {item.telefono} </h5>
                                     </div>
                                 </div>
                             )}
@@ -53,7 +49,7 @@ class AdminAutos extends Component {
                         <div className="row">
                             <div className="col-12">
                                 <div className="d-flex justify-content-end flex-column flex-sm-row align-items-stretch align-items-sm-center">
-                                    <Link to="/auto"
+                                    <Link to="/proveedor"
                                         className="btn btn-secondary m-1"
                                     >
                                         <i className="fa fa-arrow-left"></i>&nbsp;
@@ -70,6 +66,6 @@ class AdminAutos extends Component {
     }
 }
 
-const mstp = (state) => state.autos;
+const mstp = (state) => state.proveedor;
 
-export default connect(mstp, { ...actions })(AdminAutos);
+export default connect(mstp, { ...actions })(AdminProveedor);

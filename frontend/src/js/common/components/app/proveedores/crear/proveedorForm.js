@@ -13,36 +13,27 @@ const Form = ({ handleSubmit }) => (
                     <div className="row">
 
                         <div className="form-group col-12">
-                            <label htmlFor="tipo"> Tipo </label>
+                            <label htmlFor="nombre"> Nombre </label>
                             <Field
-                                name="tipo"
+                                name="nombre"
                                 component={renderField}
                                 type="text"
                                 className="form-control"
                             />
                         </div>
                         <div className="form-group col-12 col-md-6">
-                            <label htmlFor="modelo"> Modelo </label>
+                            <label htmlFor="direccion"> Direccion </label>
                             <Field
-                                name="modelo"
+                                name="direccion"
                                 component={renderField}
                                 type="text"
                                 className="form-control"
                             />
                         </div>
                         <div className="form-group col-12 col-md-6">
-                            <label htmlFor="color"> Color </label>
+                            <label htmlFor="telefono"> Telefono </label>
                             <Field
-                                name="color"
-                                component={renderField}
-                                type="text"
-                                className="form-control"
-                            />
-                        </div>
-                        <div className="form-group col-12 col-md-6">
-                            <label htmlFor="año"> Año </label>
-                            <Field
-                                name="año"
+                                name="telefono"
                                 component={renderField}
                                 type="text"
                                 className="form-control"
@@ -54,7 +45,7 @@ const Form = ({ handleSubmit }) => (
                     <div className="row">
                         <div className="col-12">
                             <div className="d-flex justify-content-end flex-column flex-sm-row align-items-stretch align-items-sm-center">
-                                <Link to="/auto"
+                                <Link to="/proveedor"
                                     className="btn btn-secondary m-1"
                                 >
                                     <i className="fa fa-times"></i>&nbsp;
@@ -75,15 +66,14 @@ const Form = ({ handleSubmit }) => (
     </form>
 );
 
-const AutoForm = reduxForm({
-    form: "autoForm",
+const ProveedorForm = reduxForm({
+    form: "proveedorForm",
     validate: (data) =>
         validate(data, {
-            tipo: validators.exists()("Campo requerido"),
-            modelo: validators.exists()("Campo requerido"),
-            color: validators.exists()("Campo requerido"),
-            año: validators.exists()("Campo requerido"),
+            nombre: validators.exists()("Campo requerido"),
+            direccion: validators.exists()("Campo requerido"),
+            telefono: validators.exists()("Campo requerido"),
         }),
 })(Form);
 
-export default AutoForm;
+export default ProveedorForm;
