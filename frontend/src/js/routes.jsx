@@ -18,6 +18,13 @@ require('../../node_modules/bootstrap/dist/css/bootstrap.css');
 import 'bootstrap/dist/css/bootstrap.min.css';
 require('../style/index.css');
 
+import {
+    Grid as AdminAutos,
+    Crear as CreatAuto,
+    Editar as EditarAuto,
+    Ver as VerAuto,
+} from './common/components/app/autos';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -26,6 +33,12 @@ module.exports = (
                 <Route exact path="/registro" component={Registro} />
                 <ProtectedRoute exact path="/" component={Inicio} />
                 <ProtectedRoute exact path="/user-profile" component={Profile} />
+
+                <ProtectedRoute exact path="/auto" component={AdminAutos} />
+                <ProtectedRoute exact path="/auto/crear" component={CreatAuto} />
+                <ProtectedRoute exact path="/auto/:id/editar" component={EditarAuto} />
+                <ProtectedRoute exact path="/auto/:id" component={VerAuto} />
+
                 <Route component={NotFound} />
             </Switch>
         </div>
