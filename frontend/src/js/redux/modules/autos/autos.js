@@ -52,7 +52,8 @@ const handleError = error => {
 
 const listar = (page = 1) => (dispatch) => {
     dispatch(setLoader(true));
-    api.get('auto').then( data => {
+    const params = { page }
+    api.get('auto', params).then( data => {
         dispatch(setPage(page));
         dispatch(setData(data));
     }).catch( error => {

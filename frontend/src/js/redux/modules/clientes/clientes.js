@@ -1,13 +1,13 @@
 import { handleActions } from 'redux-actions';
 import { push } from "react-router-redux";
-import { initialize as initializeForm } from 'redux-form';
+import { initialize as initializeForm, destroy } from 'redux-form';
 import { api } from "api";
 import swal from 'sweetalert2';
 
-const LOADER = 'LOADER_PROVEEDOR';
-const SET_DATA = "SET_DATA_PROVEEDOR";
-const SET_PAGE = "SET_PAGE_PROVEEDOR";
-const SET_ITEM = "SET_ITEM_PROVEEDOR";
+const LOADER = 'LOADER_CLIENTES';
+const SET_DATA = "SET_DATA_CLIENTES";
+const SET_PAGE = "SET_PAGE_CLIENTES";
+const SET_ITEM = "SET_ITEM_CLIENTES";
 
 // ------------------------------------
 // Pure Actions
@@ -38,12 +38,14 @@ const handleError = error => {
     let mensage;
     if(typeof(error) == 'object' && error.statusText){
         mensage = error.statusText;
+    }else if(typeof(error) == 'object' && error.detail){
+        mensage = error.detail;
     }else if(typeof(error) == 'string'){
         mensage = error;
     }
     swal.fire({
         type: "error",
-        text: mensage || "Hubo un error al obtener los datos"
+        text: mensage || "Hubo un error"
     })
 }
 // ------------------------------------
@@ -52,8 +54,9 @@ const handleError = error => {
 
 const listar = (page = 1) => (dispatch) => {
     dispatch(setLoader(true));
-    const params = { page }
-    api.get('proveedor', params).then( data => {
+    const params = { page };
+    params.is_staff = false;
+    api.get('user', params).then( data => {
         dispatch(setPage(page));
         dispatch(setData(data));
     }).catch( error => {
@@ -65,10 +68,10 @@ const listar = (page = 1) => (dispatch) => {
 
 const leer = id => (dispatch) => {
     dispatch(setLoader(true));
-    api.get(`proveedor/${id}`).then((response) => {
+    api.get(`user/${id}`).then((response) => {
         dispatch(setItem(response));
-        if (!!'proveedorForm')
-            dispatch(initializeForm('proveedorForm', response));
+        if (!!'clienteForm')
+            dispatch(initializeForm('clienteForm', response));
     }).catch( error => {
         handleError(error)
     }).finally(() => {
@@ -78,13 +81,14 @@ const leer = id => (dispatch) => {
 
 const crear = (data) => (dispatch) => {
     dispatch(setLoader(true));
-    api.post('proveedor',data).then( response =>{
+    data.is_staff = false;
+    api.post('user',data).then( response =>{
         swal.fire({
             type: "success",
             text: response.detail || "Datos agregados correctamente"
         });
-        dispatch(push('/proveedor'))
-        dispatch(listar());
+        dispatch(push('/cliente'))
+        dispatch(destroy('clienteForm'));
     }).catch( error => {
         handleError(error);
     }).finally( () => {
@@ -94,13 +98,14 @@ const crear = (data) => (dispatch) => {
 
 const editar = (data) => (dispatch) => {
     dispatch(setLoader(true));
-    api.put(`proveedor/${data.id}`, data).then( response => {
+    data.profile.user = data.id;
+    api.put(`user/update_cliente`, data).then( response => {
         swal.fire({
             type: "success",
             text: response.detail || "Registro actualizado!!!"
         });
-        dispatch(push('/proveedor'))
-        dispatch(listar());
+        dispatch(push('/cliente'))
+        dispatch(destroy('clienteForm'));
     }).catch( error => {
         handleError(error);
     }).finally( () => {
@@ -110,7 +115,7 @@ const editar = (data) => (dispatch) => {
 
 const eliminar = id => (dispatch) => {
     dispatch(setLoader(true));
-    api.eliminar(`proveedor/${id}`).then( response => {
+    api.eliminar(`user/${id}`).then( response => {
         swal.fire({
             type: "success",
             text: response.detail || "Registro eliminado correctamente"

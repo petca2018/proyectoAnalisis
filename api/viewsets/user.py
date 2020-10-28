@@ -18,7 +18,7 @@ class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.filter(is_active=True)
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    filter_fields = ("username", "first_name")
+    filter_fields = ["is_staff"]
     search_fields = ("username", "first_name")
     ordering_fields = ("username", "first_name")
 
@@ -38,13 +38,28 @@ class UserViewset(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if(request.data["profile"]):
+            profile = request.data.pop('profile')
+        if(request.data["confirm_password"]):
+            request.data.pop("confirm_password")
+        user = User.objects.create(
+            **request.data
+        )
+        user.save()
         usuario = User.objects.get(username=request.data["username"])
         usuario.set_password(request.data["password"])
         usuario.save()
+        serializer = UserReadSerializer(user)
         headers = self.get_success_headers(serializer.data)
+        if profile:
+            perfil = Profile.objects.create(
+                user = User.objects.get(id=serializer.data["id"]),
+                avatar = None,
+                phone = profile.get('phone'),
+                address = profile.get('address'),
+                gender = profile.get('gender'),
+            )
+            perfil.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
@@ -89,6 +104,43 @@ class UserViewset(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except KeyError as e:
             return Response({"detail": "{} es un campo requerido".format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(methods=["put"], detail=False)
+    def update_cliente(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            print(data)
+            avatar = data.get("avatar")
+            user = User.objects.get(id=data["id"])
+            if user.username != data["username"]:
+                try:
+                    User.objects.get(username=data["username"])
+                    return Response(
+                        {"detail": "El usuario no esta disponible, por favor selecciona otro"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                except User.DoesNotExist:
+                    pass
+            user.username = data["username"]
+            user.first_name = data["first_name"]
+            user.last_name = data["last_name"]
+            user.email = data["email"]
+            perfil, created = Profile.objects.get_or_create(user=user)
+            if avatar is not None:
+                perfil.avatar = File(avatar)
+            profile = data.get("profile")
+            if profile is not None:
+                perfil.phone = profile.get("phone", perfil.phone)
+                perfil.address = profile.get("address", perfil.address)
+                perfil.gender = profile.get("gender", perfil.gender)
+            user.save()
+            perfil.save()
+            serializer = UserReadSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except KeyError as e:
+            return Response({"detail": "{} es un campo requerido".format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(methods=["get"], detail=False)
     def me(self, request, *args, **kwargs):

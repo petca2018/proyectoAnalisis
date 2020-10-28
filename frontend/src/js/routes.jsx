@@ -32,6 +32,13 @@ import {
     Ver as VerProveedor,
 } from './common/components/app/proveedores';
 
+import {
+    Grid as AdminClientes,
+    Crear as CrearClientes,
+    Editar as EditarClientes,
+    Ver as VerClientes,
+} from './common/components/app/clientes';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -50,6 +57,11 @@ module.exports = (
                 <ProtectedRoute exact path="/proveedor/crear" component={CrearProveedor} />
                 <ProtectedRoute exact path="/proveedor/:id/editar" component={EditarProveedor} />
                 <ProtectedRoute exact path="/proveedor/:id" component={VerProveedor} />
+
+                <ProtectedRoute exact path="/cliente" component={AdminClientes} />
+                <ProtectedRoute exact path="/cliente/crear" component={CrearClientes} />
+                <ProtectedRoute exact path="/cliente/:id/editar" component={EditarClientes} />
+                <ProtectedRoute exact path="/cliente/:id" component={VerClientes} />
 
                 <Route component={NotFound} />
             </Switch>

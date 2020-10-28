@@ -7,6 +7,7 @@ import profile from './modules/cuenta/profile';
 import usuarios from './modules/usuarios/usuarios';
 import autos from './modules/autos/autos';
 import proveedor from './modules/proveedor/proveedor';
+import clientes from './modules/clientes/clientes';
 
 export default combineReducers({
     form: formReducer,
@@ -17,4 +18,5 @@ export default combineReducers({
     routing,
     autos,
     proveedor,
+    clientes,
 });
