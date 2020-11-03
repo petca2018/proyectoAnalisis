@@ -39,6 +39,13 @@ import {
     Ver as VerClientes,
 } from './common/components/app/clientes';
 
+import {
+    Grid as AdminSubasta,
+    Crear as CrearSubasta,
+    Editar as EditarSubasta,
+    Ver as VerSubasta,
+} from './common/components/app/subasta';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -62,6 +69,11 @@ module.exports = (
                 <ProtectedRoute exact path="/cliente/crear" component={CrearClientes} />
                 <ProtectedRoute exact path="/cliente/:id/editar" component={EditarClientes} />
                 <ProtectedRoute exact path="/cliente/:id" component={VerClientes} />
+
+                <ProtectedRoute exact path="/subasta" component={AdminSubasta} />
+                <ProtectedRoute exact path="/subasta/crear" component={CrearSubasta} />
+                <ProtectedRoute exact path="/subasta/:id/editar" component={EditarSubasta} />
+                <ProtectedRoute exact path="/subasta/:id" component={VerSubasta} />
 
                 <Route component={NotFound} />
             </Switch>

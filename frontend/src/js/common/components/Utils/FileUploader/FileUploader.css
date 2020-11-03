@@ -3,7 +3,7 @@
     background-color: white;
     cursor: pointer;
     display: flex;
-    height: 200px;
+    height: 100px;
     justify-content: center;
     outline: 3px dashed #ccc;
     margin-top: 7px;
@@ -25,7 +25,7 @@
     font-size: 5em;
     width: 150px;
     z-index: 1;
-    top: 40% !important;
+    top: 50% !important;
 }
 .uploader img {
     left: 50%;

@@ -224,7 +224,7 @@ export const SelectField = (
                 isDisabled={disabled}
             />
             {invalid && (
-                <div className="invalid-feedback">
+                <div className="invalid-feedback" style={{ display: "block" }}>
                     {error}
                 </div>
             )}
@@ -235,12 +235,15 @@ export const SelectField = (
 
 export const AsyncSelectField = (
     {
+        key,
         input,
         disabled,
         isClearable,
         isSearchable,
         loadOptions,
         placeholder,
+        valueKey,
+        labelKey,
         meta: { touched, error }
     }) => {
 
@@ -249,6 +252,10 @@ export const AsyncSelectField = (
     return (
         <React.Fragment>
             <Async
+                key={key}
+                cache={false}
+                autoload={false}
+                multi={true}
                 isClearable={isClearable}
                 cacheOptions
                 className={classNames('react-select-container', { 'is-invalid': invalid })}
@@ -260,9 +267,11 @@ export const AsyncSelectField = (
                 onChange={(e) => { input.onChange(e ? e : null); }}
                 value={input.value}
                 isDisabled={disabled}
+                getOptionValue={(option) => (option[valueKey])}
+                getOptionLabel={(option) => (option[labelKey])}
             />
             {invalid && (
-                <div className="invalid-feedback">
+                <div className="invalid-feedback" style={{ display: "block" }}>
                     {error}
                 </div>
             )}
@@ -368,7 +377,7 @@ export const renderDayPicker = ({className, disabled, maxDate, minDate, input, m
 export const renderDatePicker = ({className, disabled, maxDate, minDate, input, meta: { touched, error } }) => {
     const invalid = touched && error;
     return (
-        <div className={classNames(`${className}`, { 'is-invalid': invalid })}>
+        <div className={classNames(`${className}`, 'form-control', { 'is-invalid': invalid })}>
             <DatePicker
                 onChange={e => input.onChange(e)}
                 disabled={disabled}

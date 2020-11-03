@@ -157,6 +157,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
+
 # Local settigns import
 try:
     from .local_settings import *
