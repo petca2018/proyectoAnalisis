@@ -35,56 +35,8 @@ class AutoViewset(viewsets.ModelViewSet):
             permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     usuario = User.objects.get(username=request.data["username"])
-    #     usuario.set_password(request.data["password"])
-    #     usuario.save()
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        serializer.save()
-
     def get_success_headers(self, data):
         try:
             return {'Location': str(data[api_settings.URL_FIELD_NAME])}
         except (TypeError, KeyError):
             return {}
-
-    # @action(methods=["put"], detail=False)
-    # def update_me(self, request, *args, **kwargs):
-    #     data = request.data
-    #     try:
-    #         avatar = data.get("avatar")
-    #         data = json.loads(data["data"])
-    #         user = request.user
-    #         if user.username != data["username"]:
-    #             try:
-    #                 User.objects.get(username=data["username"])
-    #                 return Response(
-    #                     {"detail": "El usuario no esta disponible, por favor selecciona otro"},
-    #                     status=status.HTTP_400_BAD_REQUEST
-    #                 )
-    #             except User.DoesNotExist:
-    #                 pass
-    #         user.username = data["username"]
-    #         user.first_name = data["first_name"]
-    #         user.last_name = data["last_name"]
-    #         perfil, created = Profile.objects.get_or_create(user=user)
-    #         if avatar is not None:
-    #             perfil.avatar = File(avatar)
-    #         profile = data.get("profile")
-    #         if profile is not None:
-    #             perfil.phone = profile.get("phone", perfil.phone)
-    #             perfil.address = profile.get("address", perfil.address)
-    #             perfil.gender = profile.get("gender", perfil.gender)
-    #         user.save()
-    #         perfil.save()
-    #         serializer = UserReadSerializer(user)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     except KeyError as e:
-    #         return Response({"detail": "{} es un campo requerido".format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
-

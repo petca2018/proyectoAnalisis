@@ -32,13 +32,19 @@ class SideBar extends Component {
                         <li className="nav-item">
                             <NavLink to="/" exact className="nav-link " activeClassName={'active'}>
                                 <i className="fa fa-home"></i>
-                                <span>Home</span>
+                                <span>Inicio</span>
                             </NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink to="/subasta" exact className="nav-link " activeClassName={'active'}>
                                 <i className="fa fa-gavel"></i>
                                 <span>Subastas</span>
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/ofertas" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-money"></i>
+                                <span>Ofertas</span>
                             </NavLink>
                         </li>
                         <li className="nav-item">

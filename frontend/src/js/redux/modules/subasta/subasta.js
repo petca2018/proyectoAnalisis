@@ -9,6 +9,7 @@ const LOADER = 'LOADER_SUBASTA';
 const SET_DATA = "SET_DATA_SUBASTA";
 const SET_PAGE = "SET_PAGE_SUBASTA";
 const SET_ITEM = "SET_ITEM_SUBASTA";
+const SET_SUBASTAS = "SET_SUBASTAS";
 
 // ------------------------------------
 // Pure Actions
@@ -179,6 +180,41 @@ const getAutos = (search) => async(dispatch) => {
     return [];
 }
 
+const getSubastas = (page = 1) => (dispatch) => {
+    dispatch(setLoader(true));
+    const params = {
+        page,
+    };
+    api.get('subasta', params).then( data => {
+        dispatch(setSubastas(data));
+    }).catch( error => {
+        handleError(error);
+    }).finally( () => {
+        dispatch(setLoader(false));
+    })
+}
+
+const crearOferta = (id) => (dispatch) => {
+    dispatch(setLoader(true));
+    api.post('subasta', params).then( response => {
+        swal.fire({
+            type: "success",
+            text: response.detail || "Oferta enviada!"
+        })
+        dispatch(getSubastas());
+    }).catch( error => {
+        handleError(error)
+    }).finally( () => {
+        dispatch(setLoader(false))
+    })
+}
+
+const setSubastas = (data) => (dispatch) => {
+    dispatch({
+        type: SET_SUBASTAS,
+        data
+    })
+}
 
 export const actions = {
     listar,
@@ -188,6 +224,8 @@ export const actions = {
     editar,
     getProveedores,
     getAutos,
+    getSubastas,
+    crearOferta
 };
 
 const reducers = {
@@ -195,10 +233,17 @@ const reducers = {
     [SET_DATA]: (state, { data }) => ({ ...state, data }),
     [SET_PAGE]: (state, { page }) => ({ ...state, page }),
     [SET_ITEM]: (state, { item }) => ({ ...state, item }),
+    [SET_SUBASTAS]: (state, { data }) => ({ ...state, subastas: data }),
 };
 
 const initialState = {
     loader: false,
+    subastas: {
+        count:0,
+        next:null,
+        previous:null,
+        results: []
+    },
     page: 1,
     item: {},
     data: {

@@ -39,3 +39,27 @@ class UserReadSerializer(serializers.ModelSerializer):
             'email',
             'profile',
         )
+
+class UserSingleReadSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_superuser',
+            'is_staff',
+            'email',
+            'profile',
+        )
+
+class ProfileReadSerializer(serializers.ModelSerializer):
+
+    user = UserSingleReadSerializer(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = "__all__"
+

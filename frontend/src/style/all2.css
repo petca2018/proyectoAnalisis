@@ -3709,10 +3709,6 @@ a.list-group-item-dark.active, button.list-group-item-dark.active {
     color: #5a6169
 }
 
-.carousel {
-    box-shadow: 0 .46875rem 2.1875rem rgba(90, 97, 105, .1), 0 .9375rem 1.40625rem rgba(90, 97, 105, .1), 0 .25rem .53125rem rgba(90, 97, 105, .12), 0 .125rem .1875rem rgba(90, 97, 105, .1)
-}
-
 .carousel-item {
     transition: -webkit-transform .6s ease;
     -webkit-transition: -webkit-transform .6s ease;

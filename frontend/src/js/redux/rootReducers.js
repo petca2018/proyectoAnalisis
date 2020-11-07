@@ -9,6 +9,7 @@ import autos from './modules/autos/autos';
 import proveedor from './modules/proveedor/proveedor';
 import clientes from './modules/clientes/clientes';
 import subasta from './modules/subasta/subasta';
+import ofertas from './modules/ofertas/ofertas';
 
 export default combineReducers({
     form: formReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
     proveedor,
     clientes,
     subasta,
+    ofertas,
 });

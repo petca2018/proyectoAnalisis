@@ -105,6 +105,7 @@
     "react-notifications": "^1.4.3",
     "react-number-format": "^3.5.1",
     "react-redux": "^5.1.0",
+    "react-responsive-carousel": "^3.2.10",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",

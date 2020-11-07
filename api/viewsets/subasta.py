@@ -13,15 +13,21 @@ from django.db import transaction
 from datetime import datetime
 
 from api.models import Subasta, AutoSubastado, FotoAutoSubastado
-from api.serializers import SubastaReadSerializer, SubastaSerializer
+from api.serializers import (
+    SubastaReadSerializer, SubastaSerializer, AutoSubastadoReadSerializer,
+    AutoSubastadoConSubastaReadSerializer)
 
 
 class SubastaViewset(viewsets.ModelViewSet):
 
-    queryset = Subasta.objects.filter(estado=True)
+    queryset = Subasta.objects.filter(estado=True).order_by('-id')
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filter_fields = ["fecha_inicio", "fecha_fin"]
-    search_fields = ["fecha_inicio", "fecha_fin"]
+    filter_fields = ["fecha_inicio", "fecha_fin", "cerrado", "autoSubastado__precio_base"]
+    search_fields = ["fecha_inicio", "fecha_fin",
+        "autoSubastado__auto__tipo", "autoSubastado__auto__año", "autoSubastado__provedor__nombre",
+        "autoSubastado__auto__color", "autoSubastado__auto__modelo",
+        "autoSubastado__condiciones"
+    ]
 
 
     def get_serializer_class(self):
@@ -192,3 +198,26 @@ class SubastaViewset(viewsets.ModelViewSet):
         except Exception as error:
             print(error)
             return Response({"detail":"{}".format(str(error))}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=["get"], detail=False)
+    def get_auto_subastado(self, request, *args, **kwargs):
+
+        try:
+
+            user = request.user
+            idAutoSubastado = self.request.GET.get("id", None)
+
+            if idAutoSubastado is not None:
+                auto = AutoSubastado.objects.get(id = idAutoSubastado)
+                serializer = AutoSubastadoConSubastaReadSerializer(
+                    auto,
+                    context={'profile': user.profile}
+                )
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+            else:
+                return Response({"detail": "No hay un auto seleccionado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail": str(error)}, status=status.HTTP_400_BAD_REQUEST)

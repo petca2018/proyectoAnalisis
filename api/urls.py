@@ -10,6 +10,7 @@ router.register(r'user', viewsets.UserViewset)
 router.register(r'auto', viewsets.AutoViewset)
 router.register(r'proveedor', viewsets.ProveedorViewset)
 router.register(r'subasta', viewsets.SubastaViewset)
+router.register(r'ofertas', viewsets.OfertasViewset)
 
 urlpatterns = [
     path('api/', include(router.urls)),
