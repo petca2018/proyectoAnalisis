@@ -48,6 +48,12 @@ class SideBar extends Component {
                             </NavLink>
                         </li>
                         <li className="nav-item">
+                            <NavLink to="/autosComprados" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-car"></i>
+                                <span>Autos Comprados</span>
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
                             <NavLink to="/auto" exact className="nav-link " activeClassName={'active'}>
                                 <i className="fa fa-car"></i>
                                 <span>Autos</span>

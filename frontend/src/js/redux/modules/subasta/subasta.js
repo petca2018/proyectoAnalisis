@@ -10,7 +10,9 @@ const SET_DATA = "SET_DATA_SUBASTA";
 const SET_PAGE = "SET_PAGE_SUBASTA";
 const SET_ITEM = "SET_ITEM_SUBASTA";
 const SET_SUBASTAS = "SET_SUBASTAS";
-
+const SET_AUTOS_COMPRADOS = "SET_AUTOS_COMPRADOS";
+const PAGE_AUTOS_COMPRADOS = "PAGE_AUTOS_COMPRADOS";
+const SET_ITEM_AUTOS_COMPRADOS = "SET_ITEM_AUTOS_COMPRADOS";
 // ------------------------------------
 // Pure Actions
 // ------------------------------------
@@ -184,6 +186,7 @@ const getSubastas = (page = 1) => (dispatch) => {
     dispatch(setLoader(true));
     const params = {
         page,
+        cerrado: false,
     };
     api.get('subasta', params).then( data => {
         dispatch(setSubastas(data));
@@ -209,10 +212,70 @@ const crearOferta = (id) => (dispatch) => {
     })
 }
 
+const cerrarSubasta = id => (dispatch) => {
+    dispatch(setLoader(true));
+    api.post(`subasta/${id}/cerrar_subasta`).then( response => {
+        swal.fire({
+            type: "success",
+            text: response.detail || "Subasta cerrada"
+        }).then( () => {
+            dispatch(leer(id))
+        })
+    }).catch( error => handleError(error))
+    .finally( () => {
+        dispatch(setLoader(false))
+    })
+}
+
+const listarAutosComprados = (page = 1) => (dispatch) => {
+    dispatch(setLoader(true));
+    const params = { page };
+    api.get('subasta/get_autos_comprados', params).then( data => {
+        dispatch(setPageAutosComprados(page));
+        dispatch(setAutosComprados(data));
+    }).catch( error => {
+        handleError(error);
+    }).finally( () =>{
+        dispatch(setLoader(false))
+    })
+}
+
+const leerAutosComprados = id => dispatch => {
+    dispatch(setLoader(true))
+    api.get(`subasta/${id}/retrive_autos_comprados`).then(data => {
+        dispatch(setItemAutosComprados(data));
+    }).catch( error => {
+        handleError(error)
+    }).finally( () => {
+        dispatch(setLoader(false))
+    })
+}
+
 const setSubastas = (data) => (dispatch) => {
     dispatch({
         type: SET_SUBASTAS,
         data
+    })
+}
+
+const setAutosComprados = (data) => (dispatch) => {
+    dispatch({
+        type: SET_AUTOS_COMPRADOS,
+        data
+    })
+}
+
+const setPageAutosComprados = ( page ) => (dispatch) => {
+    dispatch({
+        type: PAGE_AUTOS_COMPRADOS,
+        page
+    })
+}
+
+const setItemAutosComprados = item => dispatch => {
+    dispatch({
+        type: SET_ITEM_AUTOS_COMPRADOS,
+        item
     })
 }
 
@@ -225,6 +288,9 @@ export const actions = {
     getProveedores,
     getAutos,
     getSubastas,
+    cerrarSubasta,
+    listarAutosComprados,
+    leerAutosComprados,
     crearOferta
 };
 
@@ -234,6 +300,9 @@ const reducers = {
     [SET_PAGE]: (state, { page }) => ({ ...state, page }),
     [SET_ITEM]: (state, { item }) => ({ ...state, item }),
     [SET_SUBASTAS]: (state, { data }) => ({ ...state, subastas: data }),
+    [SET_AUTOS_COMPRADOS]: (state, { data }) => ({ ...state, autosComprados: data }),
+    [PAGE_AUTOS_COMPRADOS]: (state, { page }) => ({ ...state, pageAutosComprados: page }),
+    [SET_ITEM_AUTOS_COMPRADOS]: (state, { item }) => ({ ...state, itemAutosComprados: item}),
 };
 
 const initialState = {
@@ -245,8 +314,16 @@ const initialState = {
         results: []
     },
     page: 1,
+    pageAutosComprados: 1,
+    itemAutosComprados: {},
     item: {},
     data: {
+        count:0,
+        next:null,
+        previous:null,
+        results: []
+    },
+    autosComprados: {
         count:0,
         next:null,
         previous:null,

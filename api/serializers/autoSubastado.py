@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from api.models import AutoSubastado, FotoAutoSubastado, Ofertas
-from api.serializers import ProveedorReadSerializer, AutoReadSerializer
+from api.models import AutoSubastado, FotoAutoSubastado, Ofertas, AutosComprados
+from api.serializers import ProveedorReadSerializer, AutoReadSerializer, ProfileReadSerializer
 
 class FotoAutoSubastadoReadSerializer(serializers.ModelSerializer):
 
@@ -93,3 +93,19 @@ class AutoSubastadoConSubastaReadSerializer(serializers.ModelSerializer):
                 resultado["mi_oferta"] = True
             lista.append(resultado)
         return lista
+
+class AutosCompradosSerializer(serializers.ModelSerializer):
+
+    profile = ProfileReadSerializer(read_only=True)
+    autoSubastado = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = AutosComprados
+        fields = "__all__"
+
+    def get_autoSubastado(self, obj):
+        serializer = AutoSubastadoConSubastaReadSerializer(
+            obj.autoSubastado,
+            context={ "profile": obj.profile }
+        )
+        return serializer.data

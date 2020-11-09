@@ -15,7 +15,7 @@ class AdminSubasta extends Component {
 
     render() {
 
-        const { item, loader } = this.props;
+        const { item, loader, cerrarSubasta } = this.props;
 
         return (
             <div className="row">
@@ -148,6 +148,15 @@ class AdminSubasta extends Component {
                                         <i className="fa fa-arrow-left"></i>&nbsp;
                                         Regresar
                                     </Link>
+                                    {item && Object.keys(item).length > 0 && item.cerrado === false && (
+                                        <button type="submit"
+                                            className="btn btn-danger m-1"
+                                            onClick={()=>cerrarSubasta(item.id)}
+                                        >
+                                            <i className="fa fa-lock"></i>&nbsp;
+                                            Cerrar subasta
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

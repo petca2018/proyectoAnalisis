@@ -17,6 +17,10 @@ const GridOfertas = ({
 }) => (
     <div className="mb-4 col-12">
         <div className="mb-4 card card-small">
+            <div className="border-bottom card-header">
+                <div className="d-flex flex-row justify-content-left">
+                </div>
+            </div>
             <div className="p-0 px-3 pt-3">
                 <Grid hover striped data={data} loading={loading} page={page} onPageChange={onPageChange} >
                     <TableHeaderColumn

@@ -11,11 +11,20 @@ from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from django.db import transaction
 from datetime import datetime
+from django.db.models import Max
+from django.shortcuts import get_object_or_404
 
-from api.models import Subasta, AutoSubastado, FotoAutoSubastado
+from api.models import (
+    Subasta,
+    AutoSubastado,
+    FotoAutoSubastado,
+    AutosComprados,
+    Ofertas
+)
+
 from api.serializers import (
     SubastaReadSerializer, SubastaSerializer, AutoSubastadoReadSerializer,
-    AutoSubastadoConSubastaReadSerializer)
+    AutoSubastadoConSubastaReadSerializer, AutosCompradosSerializer)
 
 
 class SubastaViewset(viewsets.ModelViewSet):
@@ -221,3 +230,68 @@ class SubastaViewset(viewsets.ModelViewSet):
         except Exception as error:
             print(error)
             return Response({"detail": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(methods=["post"],detail=True)
+    def cerrar_subasta(self, request, *args, **kwargs):
+
+        try:
+
+            subasta = self.get_object()
+            if subasta.cerrado == True:
+                return Response({"detail": "La subasta ya esta cerrada"}, status=status.HTTP_400_BAD_REQUEST)
+
+            autoSubastado = AutoSubastado.objects.filter(subasta = subasta.id)
+
+            for itemAuto in autoSubastado:
+                oferta_ganadora = itemAuto.ofertas.all().order_by("-monto")[0]
+                if oferta_ganadora is not None:
+                    AutosComprados.objects.create(
+                        fecha_hora = datetime.now(),
+                        monto = oferta_ganadora.monto,
+                        profile = oferta_ganadora.profile,
+                        autoSubastado_id = itemAuto.id
+                    )
+
+            subasta.cerrado = True
+            subasta.save()
+
+            return Response({"detail": "Subasta cerrada"}, status=status.HTTP_200_OK)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @action(methods=["get"], detail=False)
+    def get_autos_comprados(self, request, *args, **kwargs):
+
+        profile = request.user.profile
+
+        try:
+
+            queryset = AutosComprados.objects.filter(profile = profile)
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = AutosCompradosSerializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @action(methods=["get"], detail=True)
+    def retrive_autos_comprados(self, request, *args, **kwargs):
+
+        id = self.kwargs["pk"]
+
+        try:
+
+            queryset = AutosComprados.objects.get(id=id)
+            serializer = AutosCompradosSerializer(queryset)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail":str(error)}, status=status.HTTP_400_BAD_REQUEST)
