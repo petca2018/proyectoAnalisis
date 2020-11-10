@@ -11,6 +11,7 @@ router.register(r'auto', viewsets.AutoViewset)
 router.register(r'proveedor', viewsets.ProveedorViewset)
 router.register(r'subasta', viewsets.SubastaViewset)
 router.register(r'ofertas', viewsets.OfertasViewset)
+router.register(r'bancos', viewsets.BancoViewset)
 
 urlpatterns = [
     path('api/', include(router.urls)),

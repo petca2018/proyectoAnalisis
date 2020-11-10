@@ -58,6 +58,13 @@ import {
     Ver as VerAutosComprados,
 } from './common/components/app/autosComprados';
 
+import {
+    Grid as AdminBancos,
+    Crear as CrearBancos,
+    Editar as EditarBancos,
+    Ver as VerBancos,
+} from './common/components/app/bancos';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -91,6 +98,11 @@ module.exports = (
                 <ProtectedRoute exact path="/ofertas/crear/:id" component={CrearOferta} />
                 <ProtectedRoute exact path="/ofertas/:id/editar" component={EditarOferta} />
                 <ProtectedRoute exact path="/ofertas/:id" component={VerOferta} />
+
+                <ProtectedRoute exact path="/bancos" component={AdminBancos} />
+                <ProtectedRoute exact path="/bancos/crear/" component={CrearBancos} />
+                <ProtectedRoute exact path="/bancos/:id/editar" component={EditarBancos} />
+                <ProtectedRoute exact path="/bancos/:id" component={VerBancos} />
 
                 <ProtectedRoute exact path="/autosComprados" component={AdminAutosComprados} />
                 <ProtectedRoute exact path="/autosComprados/:id" component={VerAutosComprados} />

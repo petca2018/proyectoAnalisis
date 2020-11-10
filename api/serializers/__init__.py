@@ -9,3 +9,4 @@ from .autoSubastado import (
 )
 from .subasta import SubastaSerializer, SubastaReadSerializer
 from .ofertas import OfertasSerializer, OfertasReadSerializer
+from .banco import BancoSerializer, BancoReadSerializer

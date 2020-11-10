@@ -6,3 +6,4 @@ from .autoSubastado import *
 from .fotosAutoSubastado import *
 from .ofertas import *
 from .autos_comprados import *
+from .banco import *
