@@ -38,6 +38,7 @@ class OfertasViewset(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         data = request.data
+        user = request.user
 
         try:
 
@@ -45,6 +46,8 @@ class OfertasViewset(viewsets.ModelViewSet):
 
             if autoSubastado is None:
                 return Response({"detail": "Se necesita una auto"}, status=status.HTTP_400_BAD_REQUEST)
+            if user.profile.tarjetas is None:
+                return Response({"detail": "No tiene registrado una tarjeta"}, status=status.HTTP_400_BAD_REQUEST)
 
             autoSubastadoData = AutoSubastado.objects.get(id = autoSubastado)
             monto = data.get('monto',None)
@@ -84,6 +87,9 @@ class OfertasViewset(viewsets.ModelViewSet):
                 autoSubastado = data.get('autoSubastado', None)
                 if autoSubastado is None:
                     return Response({"detail": "Se necesita una auto"}, status=status.HTTP_400_BAD_REQUEST)
+
+                if user.profile.tarjetas is None:
+                    return Response({"detail": "No tiene registrado una tarjeta"}, status=status.HTTP_400_BAD_REQUEST)
 
                 monto_mas_alto = Ofertas.objects.filter(autoSubastado = autoSubastado).exclude(id = id).aggregate(Max('monto'))["monto__max"]
                 if monto_mas_alto and float(monto) < monto_mas_alto:

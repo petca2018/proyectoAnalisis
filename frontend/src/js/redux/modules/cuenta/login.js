@@ -46,6 +46,14 @@ export const onSubmit = (data = {}) => (dispatch, getStore) => {
 
 export const getMe = () => (dispatch) => {
     api.get('/user/me').then(me => {
+        let profile = me.profile;
+        if(profile){
+            let tarjetas = me.profile.tarjetas;
+            if(tarjetas.length)
+                me.profile.tarjetas_obj = {
+                    ...tarjetas[0]
+                }
+        }
         dispatch(initializeForm('profile', me));
         dispatch(setMe(me));
     })

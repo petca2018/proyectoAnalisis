@@ -19,12 +19,14 @@ from api.models import (
     AutoSubastado,
     FotoAutoSubastado,
     AutosComprados,
+    NotaCredito,
     Ofertas
 )
 
 from api.serializers import (
     SubastaReadSerializer, SubastaSerializer, AutoSubastadoReadSerializer,
-    AutoSubastadoConSubastaReadSerializer, AutosCompradosSerializer)
+    AutoSubastadoConSubastaReadSerializer, AutosCompradosSerializer,
+    NotaCreditoReadSerializer)
 
 
 class SubastaViewset(viewsets.ModelViewSet):
@@ -236,27 +238,43 @@ class SubastaViewset(viewsets.ModelViewSet):
     def cerrar_subasta(self, request, *args, **kwargs):
 
         try:
+            with transaction.atomic():
 
-            subasta = self.get_object()
-            if subasta.cerrado == True:
-                return Response({"detail": "La subasta ya esta cerrada"}, status=status.HTTP_400_BAD_REQUEST)
+                subasta = self.get_object()
+                if subasta.cerrado == True:
+                    return Response({"detail": "La subasta ya esta cerrada"}, status=status.HTTP_400_BAD_REQUEST)
 
-            autoSubastado = AutoSubastado.objects.filter(subasta = subasta.id)
+                autoSubastado = AutoSubastado.objects.filter(subasta = subasta.id)
 
-            for itemAuto in autoSubastado:
-                oferta_ganadora = itemAuto.ofertas.all().order_by("-monto")[0]
-                if oferta_ganadora is not None:
-                    AutosComprados.objects.create(
-                        fecha_hora = datetime.now(),
-                        monto = oferta_ganadora.monto,
-                        profile = oferta_ganadora.profile,
-                        autoSubastado_id = itemAuto.id
-                    )
+                for itemAuto in autoSubastado:
+                    oferta_ganadora = itemAuto.ofertas.all().order_by("-monto")
+                    if oferta_ganadora:
+                        oferta_ganadora = oferta_ganadora[0]
+                        tarjetas = oferta_ganadora.profile.tarjetas.all()
+                        for item in tarjetas:
+                            idTarjeta = item
+                            break
+                        NotaCredito.objects.create(
+                            fecha_hora = datetime.now(),
+                            monto = oferta_ganadora.monto,
+                            profile = oferta_ganadora.profile,
+                            tarjeta = idTarjeta,
+                            concepto = 'Compra de auto subastado',
+                        )
 
-            subasta.cerrado = True
-            subasta.save()
+                        AutosComprados.objects.create(
+                            fecha_hora = datetime.now(),
+                            monto = oferta_ganadora.monto,
+                            profile = oferta_ganadora.profile,
+                            autoSubastado_id = itemAuto.id
+                        )
 
-            return Response({"detail": "Subasta cerrada"}, status=status.HTTP_200_OK)
+                subasta.cerrado = True
+                subasta.save()
+
+                return Response({"detail": "Subasta cerrada"}, status=status.HTTP_200_OK)
+
+            return Response({"detail": "Hubo un error en el proceso"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as error:
             print(error)
@@ -295,3 +313,36 @@ class SubastaViewset(viewsets.ModelViewSet):
         except Exception as error:
             print(error)
             return Response({"detail":str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(methods=["get"], detail=False)
+    def get_notas_credito(self, request, *args, **kwargs):
+
+        profile = request.user.profile
+
+        try:
+
+            queryset = NotaCredito.objects.filter(profile=profile)
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = NotaCreditoReadSerializer(queryset, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=["get"], detail=True)
+    def get_nota_credito(self, request, *args, **kwargs):
+
+        id = self.kwargs["pk"]
+
+        try:
+
+            item = NotaCredito.objects.get(id=id)
+            serializer = NotaCreditoReadSerializer(item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as error:
+            print(error)
+            return Response({"detail": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -10,8 +10,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
-from api.models import Profile
-from api.serializers import UserSerializer, UserReadSerializer
+from api.models import Profile, Tarjeta
+from api.serializers import UserSerializer, UserReadSerializer, ProfileReadSerializer
 
 
 class UserViewset(viewsets.ModelViewSet):
@@ -38,9 +38,9 @@ class UserViewset(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
-        if(request.data["profile"]):
+        if(request.data.get("profile") is not None):
             profile = request.data.pop('profile')
-        if(request.data["confirm_password"]):
+        if(request.data.get("confirm_password") is not None):
             request.data.pop("confirm_password")
         user = User.objects.create(
             **request.data
@@ -52,6 +52,9 @@ class UserViewset(viewsets.ModelViewSet):
         serializer = UserReadSerializer(user)
         headers = self.get_success_headers(serializer.data)
         if profile:
+            tarjetas = None
+            if profile.get("tarjetas",None) is not None:
+                tarjetas = profile.pop("tarjetas")
             perfil = Profile.objects.create(
                 user = User.objects.get(id=serializer.data["id"]),
                 avatar = None,
@@ -59,6 +62,13 @@ class UserViewset(viewsets.ModelViewSet):
                 address = profile.get('address'),
                 gender = profile.get('gender'),
             )
+            if tarjetas:
+                tarjeta = Tarjeta.objects.create(
+                    numero = tarjetas.get("numero"),
+                    banco_id = tarjetas.get("banco").get("id"),
+                    profile = perfil,
+                )
+                tarjeta.save()
             perfil.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -95,9 +105,32 @@ class UserViewset(viewsets.ModelViewSet):
                 perfil.avatar = File(avatar)
             profile = data.get("profile")
             if profile is not None:
+                tarjetas = None
+                if profile.get('tarjetas', None) is not None:
+                    tarjetas = profile.pop('tarjetas')
                 perfil.phone = profile.get("phone", perfil.phone)
                 perfil.address = profile.get("address", perfil.address)
                 perfil.gender = profile.get("gender", perfil.gender)
+                if tarjetas:
+                    existe = False
+                    try:
+                        tarjeta = Tarjeta.objects.get(id=tarjetas["id"])
+                        existe = True
+                    except:
+                        existe = False
+                    if existe == True:
+                        tarjeta = Tarjeta.objects.get(id=tarjetas["id"])
+                        tarjeta.numero = tarjetas["numero"]
+                        tarjeta.banco_id = tarjetas["banco"]["id"]
+                        tarjeta.profile_id = perfil.id
+                        tarjeta.save()
+                    else:
+                        tarjeta = Tarjeta.objects.create(
+                            numero = tarjetas.get("numero"),
+                            banco_id = tarjetas.get("banco").get("id"),
+                            profile = perfil,
+                        )
+                        tarjeta.save()
             user.save()
             perfil.save()
             serializer = UserReadSerializer(user)
@@ -131,9 +164,32 @@ class UserViewset(viewsets.ModelViewSet):
                 perfil.avatar = File(avatar)
             profile = data.get("profile")
             if profile is not None:
+                tarjetas = None
+                if profile.get('tarjetas', None) is not None:
+                    tarjetas = profile.get('tarjetas')
                 perfil.phone = profile.get("phone", perfil.phone)
                 perfil.address = profile.get("address", perfil.address)
                 perfil.gender = profile.get("gender", perfil.gender)
+                if tarjetas:
+                    existe = False
+                    try:
+                        tarjeta = Tarjeta.objects.get(id=tarjetas["id"])
+                        existe = True
+                    except:
+                        existe = False
+                    if existe == True:
+                        tarjeta = Tarjeta.objects.get(id=tarjetas["id"])
+                        tarjeta.numero = tarjetas["numero"]
+                        tarjeta.banco_id = tarjetas["banco"]["id"]
+                        tarjeta.profile_id = perfil.id
+                        tarjeta.save()
+                    else:
+                        tarjeta = Tarjeta.objects.create(
+                            numero = tarjetas.get("numero"),
+                            banco_id = tarjetas.get("banco").get("id"),
+                            profile = perfil,
+                        )
+                        tarjeta.save()
             user.save()
             perfil.save()
             serializer = UserReadSerializer(user)
@@ -141,6 +197,28 @@ class UserViewset(viewsets.ModelViewSet):
         except KeyError as e:
             return Response({"detail": "{} es un campo requerido".format(str(e))}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods=["get"], detail=True)
+    def profile(self, request, *args, **kwargs):
+
+        id = self.kwargs["pk"]
+
+        queryset = Profile.objects.get(id=id)
+        serializer = ProfileReadSerializer(queryset)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["delete"], detail=True)
+    def eliminarTarjeta(self, request, *args, **kwargs):
+
+        id = self.kwargs["pk"]
+
+        tarjeta = Tarjeta.objects.get(id = id)
+        if not tarjeta:
+            return Response({"detail": "No se encuentra la tarjeta"}, status=status.HTTP_400_BAD_REQUEST)
+
+        profile = tarjeta.profile
+        tarjeta.delete()
+
+        return Response({"detail": "La tarjeta se elimino", "profile": profile.id}, status=status.HTTP_200_OK)
 
     @action(methods=["get"], detail=False)
     def me(self, request, *args, **kwargs):

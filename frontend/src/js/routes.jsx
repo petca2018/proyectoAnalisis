@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { NotificationContainer } from 'react-notifications';
 
-import {Login, Profile, Registro} from './common/components/LoginRegister';
+import {Login, Profile, ProfileVer, Registro} from './common/components/LoginRegister';
 import Inicio from './common/components/inicio/Inicio';
 import ProtectedRoute from './ProtectedRoute';
 import NotFound from './common/components/layout/NotFound/NotFound';
@@ -65,6 +65,11 @@ import {
     Ver as VerBancos,
 } from './common/components/app/bancos';
 
+import {
+    Grid as AdminNotas,
+    Ver as VerNotas,
+} from './common/components/app/notasCredito';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -72,7 +77,8 @@ module.exports = (
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/registro" component={Registro} />
                 <ProtectedRoute exact path="/" component={Inicio} />
-                <ProtectedRoute exact path="/user-profile" component={Profile} />
+                <ProtectedRoute exact path="/user-profile/:id" component={ProfileVer} />
+                <ProtectedRoute exact path="/user-profile/:id/editar" component={Profile} />
 
                 <ProtectedRoute exact path="/auto" component={AdminAutos} />
                 <ProtectedRoute exact path="/auto/crear" component={CreatAuto} />
@@ -106,6 +112,9 @@ module.exports = (
 
                 <ProtectedRoute exact path="/autosComprados" component={AdminAutosComprados} />
                 <ProtectedRoute exact path="/autosComprados/:id" component={VerAutosComprados} />
+
+                <ProtectedRoute exact path="/notas_credito" component={AdminNotas} />
+                <ProtectedRoute exact path="/notas_credito/:id" component={VerNotas} />
 
                 <Route component={NotFound} />
             </Switch>

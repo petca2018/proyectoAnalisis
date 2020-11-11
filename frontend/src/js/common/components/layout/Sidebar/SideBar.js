@@ -47,6 +47,12 @@ class SideBar extends Component {
                                 <span>Autos Comprados</span>
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink to="/notas_credito" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-clipboard"></i>
+                                <span>Notas de credito</span>
+                            </NavLink>
+                        </li>
                         {user.is_staff && (
                             <li className="nav-item">
                                 <NavLink to="/subasta" exact className="nav-link " activeClassName={'active'}>
