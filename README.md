@@ -8,7 +8,7 @@ Before you dive into anything, see for yourself how easy you can setup a full wo
 
 Step 1: Clone this repo
 ```
-git clone https://github.com/CianCoders/react-redux-starter.git
+git clone https://github.com/petca2018/proyectoAnalisis.git
 cd react-redux-starter
 ```
 
