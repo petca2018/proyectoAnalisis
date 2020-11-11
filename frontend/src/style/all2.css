@@ -2852,8 +2852,8 @@ i.material-icons {
 
 .page-item.active .page-link {
     color: #fff;
-    background-color: #007bff;
-    border-color: #007bff
+    background-color: #c4183c;
+    border-color: #c4183c;
 }
 
 .page-item.disabled .page-link {
@@ -3707,10 +3707,6 @@ a.list-group-item-dark.active, button.list-group-item-dark.active {
 .popover-body {
     padding: 15px 20px;
     color: #5a6169
-}
-
-.carousel {
-    box-shadow: 0 .46875rem 2.1875rem rgba(90, 97, 105, .1), 0 .9375rem 1.40625rem rgba(90, 97, 105, .1), 0 .25rem .53125rem rgba(90, 97, 105, .12), 0 .125rem .1875rem rgba(90, 97, 105, .1)
 }
 
 .carousel-item {
@@ -4652,7 +4648,7 @@ body {
 }
 
 a {
-    color: #007bff
+    color: #c4183c
 }
 
 a:hover {
@@ -5343,13 +5339,13 @@ a.text-accent:focus, a.text-accent:hover {
 }
 
 .main-sidebar .nav .nav-item.active, .main-sidebar .nav .nav-item .nav-link.active, .main-sidebar .nav .nav-item .nav-link:hover, .main-sidebar .nav .nav-item:hover {
-    box-shadow: inset .1875rem 0 0 #007bff;
+    box-shadow: inset .1875rem 0 0 #c4183c;
     background-color: #fbfbfb;
-    color: #007bff
+    color: #c4183c
 }
 
 .main-sidebar .nav .nav-item.active i, .main-sidebar .nav .nav-item .nav-link.active i, .main-sidebar .nav .nav-item .nav-link:hover i, .main-sidebar .nav .nav-item:hover i {
-    color: #007bff
+    color: #c4183c;
 }
 
 .main-sidebar .nav--no-borders .nav-item .nav-link {

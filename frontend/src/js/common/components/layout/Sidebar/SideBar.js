@@ -7,7 +7,7 @@ class SideBar extends Component {
     }
 
     render() {
-        const { toggleOpen, navToggle, logOut } = this.props;
+        const { toggleOpen, navToggle, logOut, user } = this.props;
         return (
             <aside className={`main-sidebar px-0 col-12 col-md-3 col-lg-2 ${toggleOpen?'':'open'}`}>
                 <div className="main-navbar">
@@ -31,12 +31,68 @@ class SideBar extends Component {
                     <ul className="nav--no-borders flex-column nav">
                         <li className="nav-item">
                             <NavLink to="/" exact className="nav-link " activeClassName={'active'}>
-                                <div className="d-inline-block item-icon-wrapper">
-                                    <i className="material-icons">edit</i>
-                                </div>
-                                <span>Home</span>
+                                <i className="fa fa-home"></i>
+                                <span>Inicio</span>
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink to="/ofertas" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-money"></i>
+                                <span>Ofertas</span>
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/autosComprados" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-car"></i>
+                                <span>Autos Comprados</span>
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/notas_credito" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-clipboard"></i>
+                                <span>Notas de credito</span>
+                            </NavLink>
+                        </li>
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/subasta" exact className="nav-link " activeClassName={'active'}>
+                                    <i className="fa fa-gavel"></i>
+                                    <span>Subastas</span>
+                                </NavLink>
+                            </li>
+                        )}
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/auto" exact className="nav-link " activeClassName={'active'}>
+                                    <i className="fa fa-car"></i>
+                                    <span>Autos</span>
+                                </NavLink>
+                            </li>
+                        )}
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/cliente" exact className="nav-link " activeClassName={'active'}>
+                                    <i className="fa fa-users"></i>
+                                    <span>Clientes</span>
+                                </NavLink>
+                            </li>
+                        )}
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/proveedor" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-user-plus"></i>
+                                    <span>Proveedores</span>
+                                </NavLink>
+                            </li>
+                        )}
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/bancos" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-university"></i>
+                                    <span>Bancos</span>
+                                </NavLink>
+                            </li>
+                        )}
                         <li className="nav-item">
                             <Link to="/login" onClick={logOut} className="nav-link">
                                 <div className="d-inline-block item-icon-wrapper">

@@ -33,7 +33,7 @@ class Navbar extends Component {
                         <DropdownMenu>
                             <DropdownItem>
                                 <Link tabIndex="0"
-                                   to="/user-profile">
+                                   to={`/user-profile/${user.profile && user.profile.id}`}>
                                     <i className="material-icons"></i>
                                     Profile
                                 </Link>

@@ -20,11 +20,16 @@ class Profile extends Component {
         update({...data, avatar: null}, [{"file": this.state.avatar, "name": "avatar"}]);
     };
 
+    componentDidMount(){
+        const { match: {params }} = this.props;
+        this.props.getMe(params.id)
+    }
+
     render() {
-        const { me } = this.props;
+        const { me, getBancos } = this.props;
 
         return (
-            <ProfileForm onSubmit={this.update} me={me} setAvatar={this.setAvatar} />
+            <ProfileForm onSubmit={this.update} me={me} setAvatar={this.setAvatar} getBancos={getBancos}/>
         );
     }
 }
