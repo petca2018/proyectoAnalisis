@@ -70,6 +70,10 @@ import {
     Ver as VerNotas,
 } from './common/components/app/notasCredito';
 
+import {
+    Reportes
+} from './common/components/app/reportes';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -115,6 +119,8 @@ module.exports = (
 
                 <ProtectedRoute exact path="/notas_credito" component={AdminNotas} />
                 <ProtectedRoute exact path="/notas_credito/:id" component={VerNotas} />
+
+                <ProtectedRoute exact path="/reportes" component={Reportes} />
 
                 <Route component={NotFound} />
             </Switch>
