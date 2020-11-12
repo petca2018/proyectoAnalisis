@@ -30,6 +30,12 @@ const Form = ({ handleSubmit, item, setOferta }) => (
                                             </div>
                                         ))}
                                     </Carousel>
+                                    <div>
+                                        <strong style={{ fontWeight: "bolder" }}> Descripcion: </strong>
+                                        <p>
+                                            {item.descripcion ? item.descripcion : 'sin descripcion'}
+                                        </p>
+                                    </div>
                                 </div>
                                 <div className="col-12 col-sm-6 px-0 px-sm-4">
                                     <h4 style={{ fontWeight: "bolder" }}>{`${item.auto.tipo} - ${item.auto.modelo}`}</h4>
