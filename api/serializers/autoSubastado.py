@@ -20,7 +20,8 @@ class AutoSubastadoSerializer(serializers.ModelSerializer):
             'auto',
             'provedor',
             'precio_base',
-            'condiciones'
+            'condiciones',
+            'descripcion',
         )
 
 
@@ -39,6 +40,7 @@ class AutoSubastadoReadSerializer(serializers.ModelSerializer):
             "provedor",
             "precio_base",
             "condiciones",
+            "descripcion",
             "fotos",
             "estado",
             "creado",
@@ -62,6 +64,7 @@ class AutoSubastadoConSubastaReadSerializer(serializers.ModelSerializer):
             "provedor",
             "precio_base",
             "condiciones",
+            "descripcion",
             "ofertas",
             "fotos",
             "estado",

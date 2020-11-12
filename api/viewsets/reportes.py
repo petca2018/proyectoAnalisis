@@ -93,7 +93,6 @@ class ReportesViewset(viewsets.ModelViewSet):
         try:
 
             cliente = self.request.GET.get('cliente', None)
-            print(cliente)
 
             lista_meses = [[
                 'Mes', 'Monto total', { "role": 'style' },

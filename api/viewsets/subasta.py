@@ -99,7 +99,8 @@ class SubastaViewset(viewsets.ModelViewSet):
                         auto_id = autoSubastadoData[autoIndex]["auto"]["id"],
                         provedor_id = autoSubastadoData[autoIndex]["provedor"]["id"],
                         precio_base = autoSubastadoData[autoIndex]["precio_base"],
-                        condiciones = autoSubastadoData[autoIndex]["condiciones"]
+                        condiciones = autoSubastadoData[autoIndex]["condiciones"],
+                        descripcion = autoSubastadoData[autoIndex]["descripcion"]
                     )
 
                     if fotosAutoSubastado:
@@ -156,6 +157,7 @@ class SubastaViewset(viewsets.ModelViewSet):
                         dataItem.provedor_id = autoSubastadoData[autoIndex]["provedor"]["id"]
                         dataItem.precio_base = autoSubastadoData[autoIndex]["precio_base"]
                         dataItem.condiciones = autoSubastadoData[autoIndex]["condiciones"]
+                        dataItem.descripcion = autoSubastadoData[autoIndex]["descripcion"]
 
                     else:
                         dataItem = AutoSubastado.objects.create(
@@ -163,7 +165,8 @@ class SubastaViewset(viewsets.ModelViewSet):
                             auto_id = autoSubastadoData[autoIndex]["auto"]["id"],
                             provedor_id = autoSubastadoData[autoIndex]["provedor"]["id"],
                             precio_base = autoSubastadoData[autoIndex]["precio_base"],
-                            condiciones = autoSubastadoData[autoIndex]["condiciones"]
+                            condiciones = autoSubastadoData[autoIndex]["condiciones"],
+                            descripcion = autoSubastadoData[autoIndex]["descripcion"]
                         )
 
                     ids_fotos = []

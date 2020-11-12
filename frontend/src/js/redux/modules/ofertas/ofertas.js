@@ -135,7 +135,7 @@ const setOferta = (editar = false, data) => (dispatch, getStore) => {
     let mi_oferta;
     if(item.ofertas)
         mi_oferta = item.ofertas.find(itemOfertas => itemOfertas.mi_oferta == true)
-
+    console.log(moment().format())
     if(mi_oferta){
         editar = true;
         mejorar_oferta = true;

@@ -9,7 +9,7 @@ Before you dive into anything, see for yourself how easy you can setup a full wo
 Step 1: Clone this repo
 ```
 git clone https://github.com/petca2018/proyectoAnalisis.git
-cd react-redux-starter
+cd proyectoAnalisis
 ```
 
 Step 2: Create a virtualenv with python3 (BASE PYTHON 3.6)
