@@ -9,7 +9,8 @@ import {
     renderDayPicker,
     SelectField,
     renderFilePicker,
-    renderField
+    renderField,
+    renderTextArea
 } from  "../../../Utils/renderField/renderField";
 
 
@@ -151,6 +152,14 @@ class ItemArray extends Component {
                             <Field
                                 name={`${auto}.precio_base`}
                                 component={renderCurrency}
+                                top={{ top: "67px", position: "inherit" }}
+                            />
+                        </div>
+                        <div className="form-group w-100">
+                            <label htmlFor="descripcion"> Descripcion </label>
+                            <Field
+                                name={`${auto}.descripcion`}
+                                component={renderTextArea}
                                 top={{ top: "67px", position: "inherit" }}
                             />
                         </div>
@@ -298,11 +307,11 @@ const SubastaForm = reduxForm({
         if(!data.fecha_inicio) errors.fecha_inicio = "Campo requerido";
         if(!data.fecha_final) errors.fecha_final = "Campo requerido";
         if(!data.hora_inicio) errors.hora_inicio = "Campo requerido"
-        // else if(data.hora_inicio < moment().format("HH:mm"))
-        //     errors.hora_inicio = "La hora de inicio no puede se menor"
-        // if(!data.hora_final) errors.hora_final = "Campo requerido";
-        // else if(data.hora_final < moment().format("HH:mm") || data.hora_final < moment().format("HH:mm"))
-        //     errors.hora_final = "La hora final no puede ser menor";
+        if(data.fecha_inicio && data.fecha_final && data.hora_inicio && data.hora_final){
+            if(moment(`${data.fecha_inicio} ${data.hora_inicio}`).isAfter(moment(`${data.fecha_final} ${data.hora_final}`))){
+                errors.hora_inicio = "La hora de inicio no puede ser mayor a la hora final";
+            }
+        }
         if(!data.autoSubastado || !data.autoSubastado.length)
             errors.autos = {_error: 'Se necesita al menos un auto'}
         else{
@@ -323,6 +332,7 @@ const SubastaForm = reduxForm({
                 if(!auto.provedor) detErrors.provedor = "Campo requerido"
                 if(!auto.condiciones) detErrors.condiciones = "Campo requerido";
                 if(!auto.precio_base) detErrors.precio_base = "Campo requerido";
+                if(!auto.descripcion) detErrors.descripcion = "Campo requerido";
                 if(detErrors) detalleArray[index] = detErrors;
             });
             if(detalleArray.length){

@@ -30,7 +30,7 @@ class Inicio extends Component {
                                                 fotos={itemAuto.fotos}
                                                 id={itemAuto.id}
                                                 subtitulo={`Modelo: ${itemAuto.auto.modelo}, Color: ${itemAuto.auto.color}`}
-                                                texto="Auto de gran potencia en el mercado a un precio accesible en subasta"
+                                                texto={itemAuto.descripcion}
                                                 boton="Ofertar"
                                                 />
                                         </div>

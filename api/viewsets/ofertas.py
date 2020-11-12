@@ -1,4 +1,6 @@
 import json
+import calendar
+from datetime import datetime
 from django.db import transaction
 from django.core.files import File
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,11 +10,12 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from django.db.models import Max
+from django.db.models import Max, Sum
 
 from api.models import Ofertas, AutoSubastado
 from api.serializers import OfertasSerializer, OfertasReadSerializer
 
+LIMITE_DE_CREDITO = 5000
 
 class OfertasViewset(viewsets.ModelViewSet):
 
@@ -54,12 +57,24 @@ class OfertasViewset(viewsets.ModelViewSet):
             if monto is None:
                 return Response({"detail": "Se necesita un monto"}, status=status.HTTP_400_BAD_REQUEST)
 
+            today=datetime.now()
+            mes_dia_inicio=datetime(today.year,today.month,1,0,0,0)
+            mes_dia_fin=datetime(today.year,today.month,calendar.monthrange(today.year, today.month)[1],0,0,0)
+            total_mis_ofertas_mes = Ofertas.objects.filter(
+                fecha_hora__gte=mes_dia_inicio,
+                fecha_hora__lte=mes_dia_fin,
+                profile = user.profile
+            ).aggregate(Sum('monto'))['monto__sum']
+
+            if total_mis_ofertas_mes and float(total_mis_ofertas_mes) > LIMITE_DE_CREDITO:
+                return Response({"detail": "La oferta supera el limite de credito de la tarjeta asociada"}, status=status.HTTP_400_BAD_REQUEST)
+
             monto_mas_alto = Ofertas.objects.filter(autoSubastado = autoSubastado).aggregate(Max('monto'))["monto__max"]
-            if monto_mas_alto and float(monto) < monto_mas_alto:
+            if monto and monto_mas_alto and float(monto) < monto_mas_alto:
                 return Response({"detail": "Hay una oferta mas alta"}, status=status.HTTP_400_BAD_REQUEST)
 
-            if float(monto) < autoSubastadoData.precio_base:
-                return Response({"detail": "La oferta es menor al precio base"}, status=status.HTTP_400_BAD_REQUEST)
+            if monto and float(monto) < autoSubastadoData.precio_base:
+                    return Response({"detail": "La oferta es menor al precio base"}, status=status.HTTP_400_BAD_REQUEST)
 
             serializerModel = self.get_serializer_class()
             serializer = serializerModel(data=data)
@@ -91,11 +106,24 @@ class OfertasViewset(viewsets.ModelViewSet):
                 if user.profile.tarjetas is None:
                     return Response({"detail": "No tiene registrado una tarjeta"}, status=status.HTTP_400_BAD_REQUEST)
 
+                today=datetime.now()
+                mes_dia_inicio=datetime(today.year,today.month,1,0,0,0)
+                mes_dia_fin=datetime(today.year,today.month,calendar.monthrange(today.year, today.month)[1],0,0,0)
+
+                total_mis_ofertas_mes = Ofertas.objects.filter(
+                    fecha_hora__gte=mes_dia_inicio,
+                    fecha_hora__lte=mes_dia_fin,
+                    profile = user.profile
+                ).aggregate(Sum('monto'))['monto__sum']
+
+                if total_mis_ofertas_mes and float(total_mis_ofertas_mes) > LIMITE_DE_CREDITO:
+                    return Response({"detail": "La oferta supera el limite de credito de la tarjeta asociada"}, status=status.HTTP_400_BAD_REQUEST)
+
                 monto_mas_alto = Ofertas.objects.filter(autoSubastado = autoSubastado).exclude(id = id).aggregate(Max('monto'))["monto__max"]
-                if monto_mas_alto and float(monto) < monto_mas_alto:
+                if monto and monto_mas_alto and float(monto) < monto_mas_alto:
                     return Response({"detail": "Hay una oferta mas alta"}, status=status.HTTP_400_BAD_REQUEST)
 
-                if float(monto) < oferta.monto:
+                if monto and float(monto) < oferta.monto:
                     return Response({"detail": "El monto debe ser mayor al anterior"}, status=status.HTTP_400_BAD_REQUEST)
 
                 serializerModel = self.get_serializer_class()

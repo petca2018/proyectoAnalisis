@@ -93,6 +93,14 @@ class SideBar extends Component {
                                 </NavLink>
                             </li>
                         )}
+                        {user.is_staff && (
+                            <li className="nav-item">
+                                <NavLink to="/reportes" exact className="nav-link " activeClassName={'active'}>
+                                <i className="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                                    <span>Reportes</span>
+                                </NavLink>
+                            </li>
+                        )}
                         <li className="nav-item">
                             <Link to="/login" onClick={logOut} className="nav-link">
                                 <div className="d-inline-block item-icon-wrapper">

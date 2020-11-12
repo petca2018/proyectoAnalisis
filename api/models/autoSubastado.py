@@ -20,6 +20,7 @@ class AutoSubastado(models.Model):
     provedor = models.ForeignKey('proveedor', on_delete=models.CASCADE, related_name='autoSubastado')
     precio_base = models.FloatField()
     condiciones = models.CharField(max_length=10, choices=CONDICIONES_AUTO, default=OPTIMO)
+    descripcion = models.CharField(max_length=3000, blank=True, null=True)
 
     estado = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)

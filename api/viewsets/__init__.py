@@ -4,3 +4,4 @@ from .proveedor import ProveedorViewset
 from .subasta import SubastaViewset
 from .ofertas import OfertasViewset
 from .banco import BancoViewset
+from .reportes import ReportesViewset
