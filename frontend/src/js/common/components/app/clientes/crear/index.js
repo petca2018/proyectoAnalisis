@@ -13,7 +13,7 @@ class AdminClientes extends Component {
 
     render() {
 
-        const { data, page, loader, listar } = this.props;
+        const { data, page, loader, listar, getBancos } = this.props;
 
         return (
             <div className="row">
@@ -24,7 +24,7 @@ class AdminClientes extends Component {
                         </div>
 
                         <LoadMask loading={loader} light blur >
-                            <ClienteForm onSubmit={this.onSubmit} creacion/>
+                            <ClienteForm onSubmit={this.onSubmit} getBancos={getBancos} creacion/>
                         </LoadMask>
 
                     </div>
