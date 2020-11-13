@@ -31,7 +31,7 @@ export const update = (data = {}, attachments=[]) => (dispatch, getStore) => {
     dispatch(setLoader(true));
     if(data.profile){
         let tarjetas = data.profile.tarjetas_obj;
-        if(Object.keys(tarjetas).length > 0)
+        if(tarjetas && Object.keys(tarjetas).length > 0)
             data.profile.tarjetas = tarjetas
     }
     console.log(data)

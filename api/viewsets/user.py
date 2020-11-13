@@ -143,7 +143,7 @@ class UserViewset(viewsets.ModelViewSet):
     def update_cliente(self, request, *args, **kwargs):
         data = request.data
         try:
-            print(data)
+
             avatar = data.get("avatar")
             user = User.objects.get(id=data["id"])
             if user.username != data["username"]:

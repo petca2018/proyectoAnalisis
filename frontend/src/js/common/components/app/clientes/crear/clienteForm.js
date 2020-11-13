@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { renderField, SelectField } from  "../../../Utils/renderField/renderField";
+import { renderField, SelectField, AsyncSelectField, renderNumber } from  "../../../Utils/renderField/renderField";
 
 
 const genderOptions = [
@@ -9,7 +9,7 @@ const genderOptions = [
     { value: 1, label: "Femenino"}
 ]
 
-const Form = ({ handleSubmit, creacion }) => (
+const Form = ({ handleSubmit, creacion, getBancos }) => (
     <form onSubmit={handleSubmit}>
         <div className="form-group card p-4">
             <div className="grid-titulo padding-15">
@@ -78,6 +78,29 @@ const Form = ({ handleSubmit, creacion }) => (
                                 options={genderOptions}
                                 type="text"
                                 className="form-control"
+                            />
+                        </div>
+                        <div className="form-group has-feedback col-12 col-md-6">
+                            <label htmlFor="profile.tarjetas_obj.numero">Numero de tarjeta</label>
+                            <Field
+                                numberFormat={"#### #### #### ####"}
+                                name="profile.tarjetas_obj.numero"
+                                component={renderNumber}
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="form-group has-feedback col-12 col-md-6">
+                            <label htmlFor="profile.tarjetas_obj.banco">Banco</label>
+                            <Field
+                                key="banco"
+                                name="profile.tarjetas_obj.banco"
+                                component={AsyncSelectField}
+                                top={{ top: "67px", position: "inherit" }}
+                                placeholder="Selecciona un banco"
+                                valueKey="id"
+                                labelKey="nombre"
+                                isSearchable
+                                loadOptions={getBancos}
                             />
                         </div>
                         {creacion && (
