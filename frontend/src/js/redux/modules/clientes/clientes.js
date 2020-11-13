@@ -69,6 +69,14 @@ const listar = (page = 1) => (dispatch) => {
 const leer = id => (dispatch) => {
     dispatch(setLoader(true));
     api.get(`user/${id}`).then((response) => {
+        let profile = response.profile;
+        if(profile){
+            let tarjetas = response.profile.tarjetas;
+            if(tarjetas && tarjetas.length)
+                response.profile.tarjetas_obj = {
+                    ...tarjetas[0]
+                }
+        }
         dispatch(setItem(response));
         if (!!'clienteForm')
             dispatch(initializeForm('clienteForm', response));
@@ -82,6 +90,11 @@ const leer = id => (dispatch) => {
 const crear = (data) => (dispatch) => {
     dispatch(setLoader(true));
     data.is_staff = false;
+    if(data.profile){
+        let tarjetas = data.profile.tarjetas_obj;
+        if(tarjetas && Object.keys(tarjetas).length > 0)
+            data.profile.tarjetas = tarjetas
+    }
     api.post('user',data).then( response =>{
         swal.fire({
             type: "success",
@@ -99,6 +112,11 @@ const crear = (data) => (dispatch) => {
 const editar = (data) => (dispatch) => {
     dispatch(setLoader(true));
     data.profile.user = data.id;
+    if(data.profile){
+        let tarjetas = data.profile.tarjetas_obj;
+        if(tarjetas && Object.keys(tarjetas).length > 0)
+            data.profile.tarjetas = tarjetas
+    }
     api.put(`user/update_cliente`, data).then( response => {
         swal.fire({
             type: "success",
@@ -128,12 +146,21 @@ const eliminar = id => (dispatch) => {
     })
 }
 
+const getBancos = search => async dispatch => {
+    const params = { search }
+    const data = await api.get('bancos', params)
+    if(data)
+        return data.results;
+    return [];
+}
+
 export const actions = {
     listar,
     leer,
     crear,
     eliminar,
     editar,
+    getBancos
 };
 
 const reducers = {

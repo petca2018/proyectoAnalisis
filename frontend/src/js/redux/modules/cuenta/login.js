@@ -49,7 +49,7 @@ export const getMe = () => (dispatch) => {
         let profile = me.profile;
         if(profile){
             let tarjetas = me.profile.tarjetas;
-            if(tarjetas.length)
+            if(tarjetas && tarjetas.length)
                 me.profile.tarjetas_obj = {
                     ...tarjetas[0]
                 }
