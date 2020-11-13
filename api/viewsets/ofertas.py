@@ -93,6 +93,7 @@ class OfertasViewset(viewsets.ModelViewSet):
 
         data = request.data
         id = self.kwargs['pk']
+        user = request.user
 
         try:
             oferta = self.get_object()
