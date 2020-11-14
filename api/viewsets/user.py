@@ -38,10 +38,11 @@ class UserViewset(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
-        if(request.data.get("profile") is not None):
+        profile = request.data.get("profile",None)
+        if profile is not None:
             profile = request.data.pop('profile')
-        if(request.data.get("confirm_password") is not None):
-            request.data.pop("confirm_password")
+        if(request.data.get("confirmPassword") is not None):
+            request.data.pop("confirmPassword")
         user = User.objects.create(
             **request.data
         )
